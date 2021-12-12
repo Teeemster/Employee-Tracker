@@ -126,18 +126,31 @@ function addRoleFun() {
                 message: "What is the role's salary?",
             },
             {
-                type: 'input',
+                type: 'list',
                 name: 'role_department',
-                message: "What is the name of the department the role belongs to?",
+                message: 'What is the name of the department the role belongs to?',
+                choices: ['Hosts', 'Service', 'Bar Staff', 'Parking', 'Leadership'],
             }
         ])
         .then((answers) => {
 
-            const sql = `BEGIN;
-            INSERT INTO departments (name) VALUES (?);
-            INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);
-            COMMIT;`
-            const params = [answers.role_title, answers.role_salary, answers.role_department, ?];
+            const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);`
+            
+            let roleDept = answers.role_department;
+
+            if (roleDept === 'Hosts') {
+                roleDept = 1
+            } else if (roleDept === 'Service') {
+                roleDept = 2
+            } else if (roleDept === 'Bar Staff') {
+                roleDept = 3
+            } else if (roleDept === 'Parking') {
+                roleDept = 4
+            } else {
+                roleDept = 5
+            };
+            
+            const params = [answers.role_title, answers.role_salary, roleDept];
 
             connection.query(sql, params, (err, result) => {
                 if (params) {
