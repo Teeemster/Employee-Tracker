@@ -94,21 +94,19 @@ function addDeptFun() {
                 message: "What is the name of the department you would like to add?",
             }
         ])
-
-    let newDept = answers.dept_input;
+        .then((answers) => {
+            let newDept = answers.dept_input;
     
-    const sql = `INSERT INTO departments (name)
+            const sql = `INSERT INTO departments (name)
     VALUES (${newDept});`
 
-    connection.query(sql, (err, result) => {
-        if (newDept) {
-            result;
-            ask();
-        }
-        console.log(err)
-        return;
-    })
-};
-    
-    
-
+            connection.query(sql, (err, result) => {
+                if (newDept) {
+                    result;
+                    ask();
+                }
+                console.log(err)
+                return;
+            })
+        })
+}
