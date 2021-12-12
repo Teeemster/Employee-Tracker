@@ -95,18 +95,58 @@ function addDeptFun() {
             }
         ])
         .then((answers) => {
-            let newDept = answers.dept_input;
-    
-            const sql = `INSERT INTO departments (name)
-    VALUES (${newDept});`
 
-            connection.query(sql, (err, result) => {
-                if (newDept) {
+            const sql = `INSERT INTO departments (name) VALUES (?)`;
+            const params = [answers.dept_input];
+
+            connection.query(sql, params, (err, result) => {
+                if (params) {
                     result;
+                    console.log(`${params} have been added to the department list!`)
                     ask();
                 }
                 console.log(err)
                 return;
             })
         })
-}
+};
+
+function addRoleFun() {
+
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'role_title',
+                message: "What is the title of the role you would like to add?",
+            },
+            {
+                type: 'input',
+                name: 'role_salary',
+                message: "What is the role's salary?",
+            },
+            {
+                type: 'input',
+                name: 'role_department',
+                message: "What is the name of the department the role belongs to?",
+            }
+        ])
+        .then((answers) => {
+
+            const sql = `BEGIN;
+            INSERT INTO departments (name) VALUES (?);
+            INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);
+            COMMIT;`
+            const params = [answers.role_title, answers.role_salary, answers.role_department, ?];
+
+            connection.query(sql, params, (err, result) => {
+                if (params) {
+                    result;
+                    console.log(`The role ${answers.role_title} has been added to the department ${answers.role_department} for a salary of ${answers.role_salary}!`)
+                    ask();
+                }
+                console.log(err)
+                return;
+            })
+        })
+};
