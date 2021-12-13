@@ -163,3 +163,76 @@ function addRoleFun() {
             })
         })
 };
+
+function addEEFun() {
+
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'ee_firstname',
+                message: "What is the first name of the employee?",
+            },
+            {
+                type: 'input',
+                name: 'ee_lastname',
+                message: "What is the last name of the employee?",
+            },
+            {
+                type: 'list',
+                name: 'ee_role',
+                message: 'What role does the employee belong to?',
+                choices: ['Lead Hostess', 'Server', 'Bartender', 'Valet', 'Manager'],
+            },
+            {
+                type: 'list',
+                name: 'ee_mgr',
+                message: 'Who is the manager of the employee?',
+                choices: ['Rupert Giles', 'Willow Rosenberg', 'Jay Beach', 'Xander Harris', 'Buffy Summers'],
+            }
+        ])
+        .then((answers) => {
+
+            let eeRole = answers.ee_role;
+
+            if (eeRole === 'Lead Hostess') {
+                eeRole = 1
+            } else if (eeRole === 'Server') {
+                eeRole = 2
+            } else if (eeRole === 'Bartender') {
+                eeRole = 3
+            } else if (eeRole === 'Valet') {
+                eeRole = 4
+            } else {
+                eeRole = 5
+            };
+
+            let eeMGR = answers.ee_mgr;
+
+            if (eeMGR === 'Rupert Giles') {
+                eeMGR = 1
+            } else if (eeMGR === 'Willow Rosenberg') {
+                eeMGR = 2
+            } else if (eeMGR === 'Jay Beach') {
+                eeMGR = 3
+            } else if (eeMGR === 'Xander Harris') {
+                eeMGR = 4
+            } else {
+                eeMGR = 5
+            };
+
+            const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+            const params = [answers.ee_firstname, answers.ee_lastname, eeRole, eeMGR];
+
+            connection.query(sql, params, (err, result) => {
+                if (params) {
+                    result;
+                    console.log(`${answers.ee_firstname + ' ' + answers.ee_lastname} has been added with a role of ${answers.ee_role} and a manager of ${answers.ee_mgr}!`)
+                    ask();
+                }
+                console.log(err)
+                return;
+            })
+        })
+};
+
