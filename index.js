@@ -33,7 +33,7 @@ function ask() {
             updateEERoleFun();
         }
     });
-}
+};
 
 ask();
 
@@ -96,7 +96,7 @@ function addDeptFun() {
         ])
         .then((answers) => {
 
-            const sql = `INSERT INTO departments (name) VALUES (?)`;
+            const sql = `INSERT INTO departments (name) VALUES (?);`
             const params = [answers.dept_input];
 
             connection.query(sql, params, (err, result) => {
@@ -135,7 +135,7 @@ function addRoleFun() {
         .then((answers) => {
 
             const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?);`
-            
+
             let roleDept = answers.role_department;
 
             if (roleDept === 'Hosts') {
@@ -149,7 +149,7 @@ function addRoleFun() {
             } else {
                 roleDept = 5
             };
-            
+
             const params = [answers.role_title, answers.role_salary, roleDept];
 
             connection.query(sql, params, (err, result) => {
@@ -221,7 +221,7 @@ function addEEFun() {
                 eeMGR = 5
             };
 
-            const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+            const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);`
             const params = [answers.ee_firstname, answers.ee_lastname, eeRole, eeMGR];
 
             connection.query(sql, params, (err, result) => {
@@ -236,3 +236,66 @@ function addEEFun() {
         })
 };
 
+function updateEERoleFun() {
+
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'ee_selection',
+                message: 'Please select an employee whose role you would like to update?',
+                choices: ['Rupert Giles', 'Willow Rosenberg', 'Jay Beach', 'Xander Harris', 'Buffy Summers'],
+            },
+            {
+                type: 'list',
+                name: 'ee_newrole',
+                message: 'What role does the employee belong to?',
+                choices: ['Lead Hostess', 'Server', 'Bartender', 'Valet', 'Manager'],
+            }
+        ])
+        .then((answers) => {
+
+            let eeSelection = answers.ee_selection;
+
+            if (eeSelection === 'Rupert Giles') {
+                eeSelection = 1
+            } else if (eeSelection === 'Willow Rosenberg') {
+                eeSelection = 2
+            } else if (eeSelection === 'Jay Beach') {
+                eeSelection = 3
+            } else if (eeSelection === 'Xander Harris') {
+                eeSelection = 4
+            } else {
+                eeSelection = 5
+            };
+
+            let eeNewRole = answers.ee_newrole;
+
+            if (eeNewRole === 'Lead Hostess') {
+                eeNewRole = 1
+            } else if (eeNewRole === 'Server') {
+                eeNewRole = 2
+            } else if (eeNewRole === 'Bartender') {
+                eeNewRole = 3
+            } else if (eeNewRole === 'Valet') {
+                eeNewRole = 4
+            } else {
+                eeNewRole = 5
+            };
+
+            const sql = `UPDATE employees
+            SET employees (role_id) VALUES (?)
+            WHERE employees.id = ${eeSelection};`
+            const params = [eeNewRole];
+
+            connection.query(sql, params, (err, result) => {
+                if (params) {
+                    result;
+                    console.log(`${answers.ee_selection} has had their role changed to ${answers.ee_newrole}.`)
+                    ask();
+                }
+                console.log(err)
+                return;
+            })
+        })
+};
