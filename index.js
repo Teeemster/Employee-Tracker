@@ -37,6 +37,7 @@ function ask() {
 
 ask();
 
+//Function For Viewing Employees
 function viewEEFun() {
     const sql = `SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name, roles.salary, roles.department_id, CONCAT (manager.first_name, ' ', manager.last_name) AS manager
     FROM employees
@@ -55,6 +56,7 @@ function viewEEFun() {
     })
 };
 
+//Function For Viewing Departments
 function viewDeptFun() {
     const sql = `SELECT departments.id, departments.name
     FROM departments;`
@@ -69,6 +71,7 @@ function viewDeptFun() {
     })
 };
 
+//Function For Viewing Roles
 function viewRoleFun() {
     const sql = `SELECT roles.id, roles.title, roles.salary, departments.name
     FROM roles
@@ -84,6 +87,7 @@ function viewRoleFun() {
     })
 };
 
+//Function For Adding Departments
 function addDeptFun() {
 
     inquirer
@@ -111,6 +115,7 @@ function addDeptFun() {
         })
 };
 
+//Function For Adding Roles
 function addRoleFun() {
 
     inquirer
@@ -164,6 +169,7 @@ function addRoleFun() {
         })
 };
 
+//Function For Adding Employees
 function addEEFun() {
 
     inquirer
@@ -236,6 +242,7 @@ function addEEFun() {
         })
 };
 
+//Function For Updating Roles
 function updateEERoleFun() {
 
     inquirer
@@ -284,12 +291,11 @@ function updateEERoleFun() {
             };
 
             const sql = `UPDATE employees
-            SET employees (role_id) VALUES (?)
-            WHERE employees.id = ${eeSelection};`
-            const params = [eeNewRole];
+           SET role_id = ${ eeNewRole }
+           WHERE id = ${ eeSelection };`
 
-            connection.query(sql, params, (err, result) => {
-                if (params) {
+            connection.query(sql, (err, result) => {
+                if (eeNewRole) {
                     result;
                     console.log(`${answers.ee_selection} has had their role changed to ${answers.ee_newrole}.`)
                     ask();
