@@ -26,7 +26,7 @@
 
 ## Contributors
 * Jay Beach
-* University of Arizonia
+* University of Arizona
 
 ## License
 * This application is covered under GPL v2.
